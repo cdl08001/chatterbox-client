@@ -7,8 +7,10 @@
 
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
     <script>
       // YOU DO NOT NEED TO EDIT THIS CODE
+      
       if (!/(&|\?)username=/.test(window.location.search)) {
         var newSearch = window.location.search;
         if (newSearch !== '' & newSearch !== '?') {
@@ -24,9 +26,23 @@
   </head>
   <body>
     <div id="main">
-      <h1>chatterbox</h1>
+      <h1>Chatterbox</h1>
+      <div class = "roomSection">
+        <h2>Room</h2>
+        <select id = "roomSelect">
+          <option value="home">Home</option>
+        </select>
+      </div>
+      <div class = 'messageSection'>
+
+          <input id="message" type="text" name="message" placeholder='Type message!!!'>
+          <input id="send" type="submit">
+
+      </div>
+        
       <!-- Your HTML goes here! -->
+      
     </div>
-    <div id="chats"></div>
+      <ul id="chats"></ul>
   </body>
 </html>
