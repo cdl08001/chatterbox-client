@@ -1,7 +1,7 @@
 var app = {
-    'server': 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
-    'friendsList': [],
-    'rooms': ['Home']
+  'server': 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
+  'friendsList': [],
+  'rooms': ['Home']
 };
 
 $(document).ready(function(){
@@ -45,14 +45,13 @@ $(document).ready(function(){
       success: function (data) {
         app.clearMessages();
         _.each(data.results, function(item) {
-          if(item.text.includes('<script>') || item.username.includes('<script>') || ((item.roomname !== null || item.roomname !== undefined) && item.roomname.includes('<script>'))){
+          if(item.text.includes('<script>') || item.text.includes('<') || item.text.includes('<img>') || item.username.includes('<script>') || ((item.roomname !== null || item.roomname !== undefined) && item.roomname.includes('<script>'))){
             delete item;
           } else {
-              var fetchUser = item.username;
-              var fetchMessage = item.text;
-              $('#chats').append(
-                `<div class = 'msgs'><div class = 'toBeFriend ${item.roomname}' value = '${fetchUser}'>${fetchUser} </div>${fetchMessage}</div>`);
-              console.log(item)
+            var fetchUser = item.username;
+            var fetchMessage = item.text;
+            $('#chats').append(
+              `<div class = 'msgs'><div display = 'block' class = 'toBeFriend ${item.roomname}' value = '${fetchUser}'>${fetchUser} </div>${fetchMessage}</div>`);
           }
           if(!app.rooms.includes(item.roomname)){
             app.rooms.push(item.roomname);
@@ -73,20 +72,19 @@ $(document).ready(function(){
   };
 
   app.renderMessage = function(message) {
-    $('#chats').append(`<li class = 'msgs'>${message.text}</li>`);
+    $('#chats').append(`<li class='msgs'>${message.text}</li>`);
   };
 
   app.renderRoom = function(roomName) {
     $('#roomSelect').append(`<option value="${roomName}">${roomName}</option>`);
     
-
   };
 
   $('#send').on('click', function() {
     var currentMessage = $('#message').val();
     var currentRoom = $('#roomSelect').val();
     var currentUser = window.location.search.split('=')[window.location.search.split('=').length -1];
-    console.log(currentRoom, currentMessage, currentUser)
+    console.log(currentRoom, currentMessage, currentUser);
     let newMessage = {
       username: currentUser,
       text: currentMessage,
@@ -100,15 +98,25 @@ $(document).ready(function(){
     app.clearMessages();
   });
   
-  $('#roomSelect').on('click', function(){
-    console.log('test');
-  })
+  $('#roomSelect').on('change', function(){
+    var selectedRoom = $(this).val();
+    $('#chats .msgs').each(function(message){
+      $(this).toggle(true);
+      if(!$(this).children().hasClass(selectedRoom)){
+        console.log(this);
+        $(this).toggle();
+      }
+    })
+  });
   
   app.handleSubmit = function(){
     // Last test needs this function
-  }
+  };
   
-  // $('.toBeFriend').on('click', function(){
-  //   console.log('CLICKED!!');
-// });
+  
+  
+  $(document).on('click', '.toBeFriend', function(){
+    console.log('CLICKED!!');
+  });
+  
 });
