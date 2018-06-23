@@ -1,8 +1,11 @@
-$(document).ready(function() {
-  // YOUR CODE HERE:
-  var app = {
-    'server': 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages'
-  };
+var app = {
+    'server': 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
+    'friendsList': [],
+    'rooms': ['Home']
+};
+
+$(document).ready(function(){
+// YOUR CODE HERE:
 
   app.init = function() {
 
@@ -28,7 +31,11 @@ $(document).ready(function() {
   };
 
   app.fetch = function() {
-
+  // item.username
+  // item.text
+  // item.createdAt
+  // item.roomname
+  // item.updatesAt
     $.ajax({
     // This is the url you should use to communicate with the parse API server.
       url: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
@@ -36,8 +43,21 @@ $(document).ready(function() {
       data: 'order=-createdAt',
       contentType: 'application/json',
       success: function (data) {
+        app.clearMessages();
         _.each(data.results, function(item) {
-          $('#chats').append(`<li class = 'msgs'>${item.text}</li>`);
+          if(item.text.includes('<script>') || item.username.includes('<script>') || ((item.roomname !== null || item.roomname !== undefined) && item.roomname.includes('<script>'))){
+            delete item;
+          } else {
+              var fetchUser = item.username;
+              var fetchMessage = item.text;
+              $('#chats').append(
+                `<div class = 'msgs'><div class = 'toBeFriend ${item.roomname}' value = '${fetchUser}'>${fetchUser} </div>${fetchMessage}</div>`);
+              console.log(item)
+          }
+          if(!app.rooms.includes(item.roomname)){
+            app.rooms.push(item.roomname);
+            app.renderRoom(item.roomname);
+          } 
         });
       },
       error: function (data) {
@@ -49,7 +69,7 @@ $(document).ready(function() {
   };
 
   app.clearMessages = function() {
-    $('#chats').children().remove();
+    $('#chats').empty();
   };
 
   app.renderMessage = function(message) {
@@ -57,19 +77,38 @@ $(document).ready(function() {
   };
 
   app.renderRoom = function(roomName) {
-    $('#roomSelect').append(`<option>${roomName}</option>`);
+    $('#roomSelect').append(`<option value="${roomName}">${roomName}</option>`);
+    
 
   };
 
   $('#send').on('click', function() {
     var currentMessage = $('#message').val();
-    console.log(currentMessage);
+    var currentRoom = $('#roomSelect').val();
+    var currentUser = window.location.search.split('=')[window.location.search.split('=').length -1];
+    console.log(currentRoom, currentMessage, currentUser)
+    let newMessage = {
+      username: currentUser,
+      text: currentMessage,
+      roomname: currentRoom
+    };
+    app.send(newMessage);
+    app.fetch();
   });
-  // $("#send").on('click', app.send(newMessage));
-
-  // let newMessage = {
-  //   username: window.location.search.split('=')[window.location.search.split('=').length -1],
-  //   text: document.getElementById('message').value,
-  //   roomname: $('#roomSelect').val,
-  // };
+  
+  $('#clear').on('click', function() {
+    app.clearMessages();
+  });
+  
+  $('#roomSelect').on('click', function(){
+    console.log('test');
+  })
+  
+  app.handleSubmit = function(){
+    // Last test needs this function
+  }
+  
+  // $('.toBeFriend').on('click', function(){
+  //   console.log('CLICKED!!');
+// });
 });

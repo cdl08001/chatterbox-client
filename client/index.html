@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>chatterbox</title>
+    <link href="https://fonts.googleapis.com/css?family=Patua+One" rel="stylesheet">
     <link rel="stylesheet" href="styles/styles.css">
 
     <!-- dependencies -->
@@ -28,21 +29,23 @@
     <div id="main">
       <h1>Chatterbox</h1>
       <div class = "roomSection">
-        <h2>Room</h2>
-        <select id = "roomSelect">
-          <option value="home">Home</option>
+        <h2>Select Room:
+          <select id = "roomSelect">
+            <option value="Home">Home</option>
+            <option value="test">test</option>
+        </h2>
         </select>
       </div>
       <div class = 'messageSection'>
-
+          <h2>Type a Message:</h2>
           <input id="message" type="text" name="message" placeholder='Type message!!!'>
-          <input id="send" type="submit">
-
+          <input id="send" class="submit" type="submit">
+          <input id="clear" type="submit" value='Clear Messages'>
       </div>
         
       <!-- Your HTML goes here! -->
       
     </div>
-      <ul id="chats"></ul>
+      <div id="chats"></div\>
   </body>
 </html>
