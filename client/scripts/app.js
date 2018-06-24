@@ -1,7 +1,7 @@
 var app = {
   'server': 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
   'friendsList': [],
-  'rooms': ['Home']
+  'rooms': ['---Select A Room---']
 };
 
 $(document).ready(function(){
@@ -51,7 +51,7 @@ $(document).ready(function(){
             var fetchUser = item.username;
             var fetchMessage = item.text;
             $('#chats').append(
-              `<div class = 'msgs'><div display = 'block' class = 'toBeFriend ${item.roomname}' value = '${fetchUser}'>${fetchUser} </div>${fetchMessage}</div>`);
+              `<div class = 'msgs'><div class = 'toBeFriend ${item.roomname}' value = '${fetchUser}'>${fetchUser} </div>${fetchMessage}</div>`);
           }
           if(!app.rooms.includes(item.roomname)){
             app.rooms.push(item.roomname);
@@ -102,21 +102,27 @@ $(document).ready(function(){
     var selectedRoom = $(this).val();
     $('#chats .msgs').each(function(message){
       $(this).toggle(true);
-      if(!$(this).children().hasClass(selectedRoom)){
-        console.log(this);
-        $(this).toggle();
+      if(selectedRoom === 'AllChats'){
+        $(this).toggle(true);
+      } else if(!$(this).children().hasClass(selectedRoom)){
+        $(this).toggle(false);
       }
-    })
+    });
   });
   
   app.handleSubmit = function(){
     // Last test needs this function
   };
   
-  
+  app.handleUsernameClick = function(parameter){
+    if (!app.friendsList.includes(($(parameter).context.innerText))) {
+      app.friendsList.push(($(parameter).context.innerText));
+    }
+  };
   
   $(document).on('click', '.toBeFriend', function(){
-    console.log('CLICKED!!');
+    let self = this;
+    app.handleUsernameClick(self);
   });
   
 });
